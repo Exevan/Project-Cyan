@@ -25,6 +25,7 @@ public class CyanUI extends JFrame{
 		Dimension screen = Toolkit.getDefaultToolkit().getScreenSize();
 		this.setBounds(0, 0,screen.width, screen.height);
 		this.setContentPane(new Display());
+		this.setIgnoreRepaint(true);
 		this.setUndecorated(true);
 		this.setVisible(true);
 	}
