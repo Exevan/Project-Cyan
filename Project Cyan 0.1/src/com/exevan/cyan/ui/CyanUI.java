@@ -10,7 +10,6 @@ import javax.swing.ActionMap;
 import javax.swing.InputMap;
 import javax.swing.JComponent;
 import javax.swing.JFrame;
-import javax.swing.JRootPane;
 import javax.swing.KeyStroke;
 
 public class CyanUI extends JFrame{
@@ -31,14 +30,15 @@ public class CyanUI extends JFrame{
 	}
 	
 	private void initializeKeybindings() {
-		InputMap imap = ((JRootPane) this.getRootPane()).getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW);
-		ActionMap amap = ((JRootPane) this.getRootPane()).getActionMap();
+		InputMap imap = this.getRootPane().getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW);
+		ActionMap amap = this.getRootPane().getActionMap();
 		imap.put(KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE, 0), "esc");
 		amap.put("esc", new CloseAction());
 	}
 	
 	public void close() {
 		this.dispose();
+		System.exit(1000);
 	}
 	
 	private class CloseAction extends AbstractAction {
