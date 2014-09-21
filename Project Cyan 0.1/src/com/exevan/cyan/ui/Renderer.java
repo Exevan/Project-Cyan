@@ -29,7 +29,7 @@ public class Renderer extends Thread {
 		listeners.add(listener);
 	}
 
-	private void fireTick() {
+	private void updateUI() {
 		synchronized (this) {
 			ActionEvent e = new ActionEvent(this, 0, "tick");
 			for (ActionListener l : listeners) {
@@ -43,12 +43,11 @@ public class Renderer extends Thread {
 		super.run();
 		while(true) {
 			try {
-				Thread.sleep(10);
-
+				Thread.sleep(100);
 			} catch (InterruptedException e) {
 
 			}
-			fireTick();
+			updateUI();
 		}
 	}
 
@@ -62,9 +61,10 @@ public class Renderer extends Thread {
 		int dy = (y % CELL_SIZE) - CELL_SIZE;
 		g.setColor(Color.GREEN);
 		for(int i = 0; i <= width; i += CELL_SIZE) {
-			for(int j = 0; j <= height; j += CELL_SIZE) {
-				g.drawRect(i + dx, j + dy, width, height);
-			}
+			g.drawLine(i+dx, 0, i+dx, 900);
+		}
+		for(int j = 0; j <= height + CELL_SIZE; j += CELL_SIZE) {
+			g.drawLine(0, j+dy, 1600, j+dy);
 		}
 	}
 
