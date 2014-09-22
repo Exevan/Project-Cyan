@@ -1,12 +1,16 @@
 package com.exevan.cyan;
 
 import java.awt.EventQueue;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.util.Vector;
 
 import com.exevan.cyan.domain.World;
+import com.exevan.cyan.event.Event;
 import com.exevan.cyan.ui.CyanUI;
 
 
-public class Cyan {
+public class Cyan extends Thread {
 
 	/**
 	 * Launch the application.
@@ -15,7 +19,7 @@ public class Cyan {
 		new Cyan();
 	}
 	
-	
+	private Vector<ActionListener> listeners;
 	
 	private CyanUI ui;
 	private World world;
@@ -23,6 +27,21 @@ public class Cyan {
 	public Cyan() {
 		initWorld();
 		initUI();
+		try {
+			Thread.sleep(1000);
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		initListeners();
+		this.start();
+	}
+	
+	
+	private void initListeners() {
+		this.listeners = new Vector<ActionListener>();
+		listeners.add(ui);
+		listeners.add(world);
 	}
 	
 	private void initWorld() {
@@ -40,5 +59,27 @@ public class Cyan {
 				}
 			}
 		});
+	}
+
+	@Override
+	public void run() {
+		super.run();
+		while(true) {
+			try {
+				Thread.sleep(10);
+			} catch (InterruptedException e) {
+
+			}
+			tick();
+		}
+	}
+	
+	private void tick() {
+		synchronized (this) {
+			ActionEvent e = new ActionEvent(this, Event.TICK, "tick");
+			for (ActionListener l : listeners) {
+				l.actionPerformed(e);
+			}
+		}
 	}
 }

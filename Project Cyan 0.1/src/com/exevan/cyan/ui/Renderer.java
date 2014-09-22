@@ -4,17 +4,11 @@ import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Toolkit;
-import java.awt.event.ActionListener;
-import java.util.Vector;
-
-import java.awt.event.ActionEvent;
 
 public class Renderer extends Thread {
 
 	int x, y;
 	int width, height;
-
-	private Vector<ActionListener> listeners;
 
 	public Renderer(int width, int height) {
 		this.x = 0;
@@ -22,33 +16,6 @@ public class Renderer extends Thread {
 		Dimension screen = Toolkit.getDefaultToolkit().getScreenSize();
 		this.width = screen.width;
 		this.height = screen.height;
-		this.listeners = new Vector<ActionListener>();
-	}
-
-	synchronized public void registerListener(ActionListener listener) {
-		listeners.add(listener);
-	}
-
-	private void updateUI() {
-		synchronized (this) {
-			ActionEvent e = new ActionEvent(this, 0, "tick");
-			for (ActionListener l : listeners) {
-				l.actionPerformed(e);
-			}
-		}
-	}
-
-	@Override
-	public void run() {
-		super.run();
-		while(true) {
-			try {
-				Thread.sleep(100);
-			} catch (InterruptedException e) {
-
-			}
-			updateUI();
-		}
 	}
 
 	public void updateSreenPosition(int x, int y) {
@@ -61,10 +28,10 @@ public class Renderer extends Thread {
 		int dy = (y % CELL_SIZE) - CELL_SIZE;
 		g.setColor(Color.GREEN);
 		for(int i = 0; i <= width; i += CELL_SIZE) {
-			g.drawLine(i+dx, 0, i+dx, 900);
+			g.drawLine(i+dx, 0, i+dx, height);
 		}
 		for(int j = 0; j <= height + CELL_SIZE; j += CELL_SIZE) {
-			g.drawLine(0, j+dy, 1600, j+dy);
+			g.drawLine(0, j+dy, width, j+dy);
 		}
 	}
 
