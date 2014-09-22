@@ -13,15 +13,15 @@ import javax.swing.JComponent;
 import javax.swing.JFrame;
 import javax.swing.KeyStroke;
 
+import com.exevan.cyan.event.Dispatcher;
 import com.exevan.cyan.event.Event;
 
 public class CyanUI extends JFrame  implements ActionListener {
 
 	private static final long serialVersionUID = 1L;
 
-	/**
-	 * Initialize the contents of the frame.
-	 */
+	private Dispatcher dispatcher;
+	
 	public void initialize() {
 		initializeKeybindings();
 		Dimension screen = Toolkit.getDefaultToolkit().getScreenSize();
@@ -37,6 +37,14 @@ public class CyanUI extends JFrame  implements ActionListener {
 		ActionMap amap = this.getRootPane().getActionMap();
 		imap.put(KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE, 0), "esc");
 		amap.put("esc", new CloseAction());
+		
+		imap.put(KeyStroke.getKeyStroke(KeyEvent.VK_SPACE, 0), "space");
+		amap.put("space", new KeyAction(KeyEvent.VK_SPACE));
+		
+	}
+	
+	public void setDispatcher(Dispatcher dispatcher) {
+		this.dispatcher = dispatcher;
 	}
 	
 	public void close() {
@@ -61,4 +69,19 @@ public class CyanUI extends JFrame  implements ActionListener {
 		}
 	}
 	
+	private class KeyAction extends AbstractAction {
+		
+		int key;
+		
+		public KeyAction(int key) {
+			this.key = key;
+		}
+		
+		private static final long serialVersionUID = 1L;
+
+		@Override
+		public void actionPerformed(ActionEvent e) {
+			System.out.println("key " + key + " pressed");
+		}
+	}
 }

@@ -6,6 +6,7 @@ import java.awt.event.ActionListener;
 import java.util.Vector;
 
 import com.exevan.cyan.domain.World;
+import com.exevan.cyan.event.Dispatcher;
 import com.exevan.cyan.event.Event;
 import com.exevan.cyan.ui.CyanUI;
 
@@ -23,6 +24,7 @@ public class Cyan extends Thread {
 	
 	private CyanUI ui;
 	private World world;
+	private Dispatcher dispatcher;
 	
 	public Cyan() {
 		initWorld();
@@ -34,14 +36,9 @@ public class Cyan extends Thread {
 			e.printStackTrace();
 		}
 		initListeners();
+		initDispatcher(ui, world);
+		this.setName("Game loop");
 		this.start();
-	}
-	
-	
-	private void initListeners() {
-		this.listeners = new Vector<ActionListener>();
-		listeners.add(ui);
-		listeners.add(world);
 	}
 	
 	private void initWorld() {
@@ -59,6 +56,17 @@ public class Cyan extends Thread {
 				}
 			}
 		});
+	}
+	
+	private void initListeners() {
+		this.listeners = new Vector<ActionListener>();
+		listeners.add(ui);
+		listeners.add(world);
+	}
+	
+	private void initDispatcher(ActionListener... listeners) {
+		dispatcher = new Dispatcher(listeners);
+		ui.setDispatcher(dispatcher);
 	}
 
 	@Override
