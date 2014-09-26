@@ -1,22 +1,59 @@
 package com.exevan.cyan.event;
 
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
+import java.util.Queue;
 import java.util.Vector;
+import java.util.concurrent.DelayQueue;
 
 public class Dispatcher {
 	
-	private Vector<ActionListener> listeners;
+	private Queue<Event> eventQueue;
 	
-	public Dispatcher(ActionListener... listeners) {
-		this.listeners = new Vector<ActionListener>();
-		for (ActionListener listener : listeners)
-			this.listeners.add(listener);
+	private Vector<EventListener> inputListeners;
+	private Vector<EventListener> worldListeners;
+	
+	public Dispatcher() {
+		this.eventQueue = new DelayQueue<Event>();
+		this.inputListeners = new Vector<EventListener>();
+		this.worldListeners = new Vector<EventListener>();
 	}
 	
-	public void dispatch(ActionEvent e) {
-		for (ActionListener listener : listeners)
-			listener.actionPerformed(e);
+	public void addInputListener(EventListener... listeners) {
+		for (EventListener listener : listeners) {
+			inputListeners.add(listener);
+		} 
+	}
+	
+	public void addWorldListener(EventListener... listeners) {
+		for (EventListener listener : listeners) {
+			worldListeners.add(listener);
+		} 
+	}
+	
+	public void publish(Event e) {
+		eventQueue.offer(e);
+	}
+	
+	public void dispatch() {
+		Event e = eventQueue.poll();
+		if (e.getId() == Event.TICK) {
+			System.out.println("Dispatching tick event");
+			dispatchTick(e);
+		}
+	}
+	
+	private void dispatchTick(Event e) {
+		for (EventListener listener : inputListeners)
+			listener.handle(e);
+	}
+	
+	private void dispatchInputEvent(Event e) {
+		for (EventListener listener : inputListeners)
+			listener.handle(e);
+	}
+	
+	private void dispatchWorldEvent(Event e) {
+		for (EventListener listener : worldListeners)
+			listener.handle(e);
 	}
 
 }

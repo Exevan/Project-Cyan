@@ -1,12 +1,12 @@
 package com.exevan.cyan.domain;
 
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
+import com.exevan.cyan.event.Event;
+import com.exevan.cyan.event.EventListener;
 
-public class World implements ActionListener {
+public class World implements EventListener {
 
 	@Override
-	public void actionPerformed(ActionEvent e) {
+	public void handle(Event e) {
 		// TODO Auto-generated method stub
 		
 	}

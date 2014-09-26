@@ -3,7 +3,6 @@ package com.exevan.cyan.ui;
 import java.awt.Dimension;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 
 import javax.swing.AbstractAction;
@@ -15,8 +14,9 @@ import javax.swing.KeyStroke;
 
 import com.exevan.cyan.event.Dispatcher;
 import com.exevan.cyan.event.Event;
+import com.exevan.cyan.event.EventListener;
 
-public class CyanUI extends JFrame  implements ActionListener {
+public class CyanUI extends JFrame  implements EventListener {
 
 	private static final long serialVersionUID = 1L;
 
@@ -53,8 +53,8 @@ public class CyanUI extends JFrame  implements ActionListener {
 	}
 	
 	@Override
-	public void actionPerformed(ActionEvent e) {
-		if (e.getID() == Event.TICK)
+	public void handle(Event e) {
+		if (e.getId() == Event.TICK)
 			this.repaint();
 	}
 	
