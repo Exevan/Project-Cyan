@@ -5,9 +5,6 @@ import java.util.concurrent.TimeUnit;
 
 public abstract class Event implements Delayed{
 
-	public static final int TICK = 0;
-	public static final int KEY = 1;
-	
 	private int type;
 	private long delay;
 	

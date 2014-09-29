@@ -15,6 +15,7 @@ import com.exevan.cyan.framework.dispatch.InputDispatcher;
 import com.exevan.cyan.framework.event.Event;
 import com.exevan.cyan.framework.event.IEventListener;
 import com.exevan.cyan.framework.event.KeyEvent;
+import com.exevan.cyan.framework.event.TickEvent;
 
 public class CyanUI extends JFrame  implements IEventListener {
 
@@ -42,6 +43,17 @@ public class CyanUI extends JFrame  implements IEventListener {
 		imap.put(KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_SPACE, 0), "space");
 		amap.put("space", new KeyAction(java.awt.event.KeyEvent.VK_SPACE));
 		
+		imap.put(KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_Z, 0), "z");
+		amap.put("z", new KeyAction(java.awt.event.KeyEvent.VK_Z));
+		
+		imap.put(KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_Q, 0), "q");
+		amap.put("q", new KeyAction(java.awt.event.KeyEvent.VK_Q));
+		
+		imap.put(KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_S, 0), "s");
+		amap.put("s", new KeyAction(java.awt.event.KeyEvent.VK_S));
+		
+		imap.put(KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_D, 0), "d");
+		amap.put("d", new KeyAction(java.awt.event.KeyEvent.VK_D));
 	}
 	
 	public void setInputDispatcher(InputDispatcher dispatcher) {
@@ -55,9 +67,9 @@ public class CyanUI extends JFrame  implements IEventListener {
 	
 	@Override
 	public void handle(Event e) {
-		if (e.getType() == Event.TICK)
+		if (e.getType() == TickEvent.TYPE)
 			this.repaint();
-		if (e.getType() == Event.KEY)
+		if (e.getType() == KeyEvent.TYPE)
 			this.handleKeyEvent((KeyEvent) e);	
 	}
 	

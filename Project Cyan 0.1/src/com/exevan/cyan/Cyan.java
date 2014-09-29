@@ -61,7 +61,7 @@ public class Cyan extends Thread implements IEventListener {
 		gameDispatcher.register(ui, world);
 		
 		inputDispatcher = new InputDispatcher();
-		inputDispatcher.register(this);
+		inputDispatcher.register(this, world);
 		ui.setInputDispatcher(inputDispatcher);
 	}
 
@@ -83,7 +83,7 @@ public class Cyan extends Thread implements IEventListener {
 	
 	@Override
 	public void handle(Event e) {
-		if (e.getType() == Event.KEY)
+		if (e.getType() == KeyEvent.TYPE)
 			this.handleKeyEvent((KeyEvent) e);	
 	}
 	
