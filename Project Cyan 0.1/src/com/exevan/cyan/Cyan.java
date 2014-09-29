@@ -1,17 +1,16 @@
 package com.exevan.cyan;
 
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.util.Vector;
-
 import com.exevan.cyan.domain.World;
-import com.exevan.cyan.event.Dispatcher;
-import com.exevan.cyan.event.Event;
-import com.exevan.cyan.event.GameEventQueue;
+import com.exevan.cyan.framework.dispatch.GameDispatcher;
+import com.exevan.cyan.framework.dispatch.InputDispatcher;
+import com.exevan.cyan.framework.event.Event;
+import com.exevan.cyan.framework.event.GameEventQueue;
+import com.exevan.cyan.framework.event.IEventListener;
+import com.exevan.cyan.framework.event.KeyEvent;
+import com.exevan.cyan.framework.event.TickEvent;
 import com.exevan.cyan.ui.CyanUI;
 
-
-public class Cyan extends Thread {
+public class Cyan extends Thread implements IEventListener {
 
 	/**
 	 * Launch the application.
@@ -22,7 +21,10 @@ public class Cyan extends Thread {
 	
 	private CyanUI ui;
 	private World world;
-	private Dispatcher dispatcher;
+	
+	private GameDispatcher gameDispatcher;
+	private InputDispatcher inputDispatcher;
+	
 	
 	public Cyan() {
 		initWorld();
@@ -36,8 +38,7 @@ public class Cyan extends Thread {
 		initDispatcher();
 		this.setName("Game loop");
 		this.start();
-	}
-	
+	}	
 	private void initWorld() {
 		world = new World();
 	}
@@ -56,23 +57,40 @@ public class Cyan extends Thread {
 	}
 	
 	private void initDispatcher() {
-		dispatcher = new Dispatcher();
-		dispatcher.addInputListener(ui, world);
-		//dispatcher.addWorldListener(ui, world);
-		ui.setDispatcher(dispatcher);
+		gameDispatcher = new GameDispatcher();
+		gameDispatcher.register(ui, world);
+		
+		inputDispatcher = new InputDispatcher();
+		inputDispatcher.register(this);
+		ui.setInputDispatcher(inputDispatcher);
 	}
 
 	@Override
 	public void run() {
 		super.run();
+		inputDispatcher.start();
+		Event tick = new TickEvent();
 		while(true) {
 			try {
 				Thread.sleep(10);
 			} catch (InterruptedException e) {
 
 			}
-			dispatcher.publish(new Event(Event.TICK));
-			dispatcher.dispatch();
+			gameDispatcher.postEvent(tick);
+			gameDispatcher.dispatch();
 		}
 	}
+	
+	@Override
+	public void handle(Event e) {
+		if (e.getType() == Event.KEY)
+			this.handleKeyEvent((KeyEvent) e);	
+	}
+	
+	private void handleKeyEvent(KeyEvent e) {
+		if(e.getKey() == java.awt.event.KeyEvent.VK_ESCAPE)
+			System.exit(NORM_PRIORITY);
+	}
+	
+	
 }

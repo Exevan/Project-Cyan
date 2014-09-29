@@ -1,4 +1,4 @@
-package com.exevan.cyan.event;
+package com.exevan.cyan.framework.event;
 
 import java.awt.AWTEvent;
 import java.awt.EventQueue;

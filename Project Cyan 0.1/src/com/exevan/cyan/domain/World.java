@@ -1,9 +1,9 @@
 package com.exevan.cyan.domain;
 
-import com.exevan.cyan.event.Event;
-import com.exevan.cyan.event.EventListener;
+import com.exevan.cyan.framework.event.Event;
+import com.exevan.cyan.framework.event.IEventListener;
 
-public class World implements EventListener {
+public class World implements IEventListener {
 
 	@Override
 	public void handle(Event e) {

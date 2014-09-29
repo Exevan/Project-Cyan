@@ -1,22 +1,23 @@
-package com.exevan.cyan.event;
+package com.exevan.cyan.framework.event;
 
 import java.util.concurrent.Delayed;
 import java.util.concurrent.TimeUnit;
 
-public class Event implements Delayed{
+public abstract class Event implements Delayed{
 
 	public static final int TICK = 0;
+	public static final int KEY = 1;
 	
-	private int id;
+	private int type;
 	private long delay;
 	
-	public Event(int id) {
-		this.id = id;
+	public Event(int type) {
+		this.type = type;
 		this.delay = 0;
 	}
 
-	public int getId() {
-		return id;
+	public int getType() {
+		return type;
 	}
 	
 	@Override
