@@ -58,6 +58,7 @@ public class CyanUI extends JFrame  implements IEventListener {
 	
 	public void setInputDispatcher(InputDispatcher dispatcher) {
 		this.dispatcher = dispatcher;
+		((Display) this.getContentPane()).setDispatcher(dispatcher);
 	}
 	
 	public void close() {

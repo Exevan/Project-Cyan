@@ -7,9 +7,13 @@ import java.awt.event.MouseEvent;
 
 import javax.swing.JPanel;
 
+import com.exevan.cyan.framework.dispatch.InputDispatcher;
+
 public class Display extends JPanel {
 
 	private static final long serialVersionUID = 1L;
+	
+	private InputDispatcher dispatcher;
 	
 	private Renderer renderer;
 	
@@ -21,6 +25,9 @@ public class Display extends JPanel {
 			@Override
 			public void mouseDragged(MouseEvent e) {
 				super.mouseDragged(e);
+				int x = e.getX() / Renderer.CELL_SIZE;
+				int y = e.getY() / Renderer.CELL_SIZE;
+				dispatcher.postEvent(new com.exevan.cyan.framework.event.MouseEvent(x, y));
 				renderer.updateSreenPosition(e.getX(), e.getY());
 			}
 		};
@@ -29,6 +36,10 @@ public class Display extends JPanel {
 		this.setIgnoreRepaint(true);
 	}
 	
+	public void setDispatcher(InputDispatcher dispatcher) {
+		this.dispatcher = dispatcher;
+	}
+
 	@Override
 	public void paint(Graphics g) {
 		super.paint(g);
