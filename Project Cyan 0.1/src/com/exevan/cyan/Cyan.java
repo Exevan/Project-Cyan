@@ -1,6 +1,6 @@
 package com.exevan.cyan;
 
-import com.exevan.cyan.domain.World;
+import com.exevan.cyan.domain.world.World;
 import com.exevan.cyan.framework.dispatch.GameDispatcher;
 import com.exevan.cyan.framework.dispatch.InputDispatcher;
 import com.exevan.cyan.framework.event.Event;

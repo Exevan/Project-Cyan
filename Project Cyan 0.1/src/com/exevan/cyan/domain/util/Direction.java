@@ -1,4 +1,4 @@
-package com.exevan.cyan.domain;
+package com.exevan.cyan.domain.util;
 
 public enum Direction {
 	
