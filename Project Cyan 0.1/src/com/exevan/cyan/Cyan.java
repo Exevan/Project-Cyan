@@ -8,6 +8,7 @@ import com.exevan.cyan.framework.event.GameEventQueue;
 import com.exevan.cyan.framework.event.IEventListener;
 import com.exevan.cyan.framework.event.KeyEvent;
 import com.exevan.cyan.framework.event.TickEvent;
+import com.exevan.cyan.reference.ResourceLoader;
 import com.exevan.cyan.ui.CyanUI;
 
 public class Cyan extends Thread implements IEventListener {
@@ -27,6 +28,7 @@ public class Cyan extends Thread implements IEventListener {
 	
 	
 	public Cyan() {
+		loadResources();
 		initWorld();
 		initUI();
 		try {
@@ -38,7 +40,12 @@ public class Cyan extends Thread implements IEventListener {
 		initDispatcher();
 		this.setName("Game loop");
 		this.start();
-	}	
+	}
+	
+	private void loadResources() {
+		ResourceLoader.loadResources();
+	}
+	
 	private void initWorld() {
 		world = new World();
 	}

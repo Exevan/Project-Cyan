@@ -32,21 +32,44 @@ public class EntityTree {
 			node.right = insert(entity, node.right);
 		return node;
 	}
-	
+
 	public void remove(Entity entity) {
-		root = remove(entity, root);
+		remove(entity, root);
 	}
-	
-	private Enode remove(Entity entity, Enode node) {
-		//google BST node removal
+
+	private void remove(Entity entity, Enode node) {
+		if(node == null)
+			return;
+		
+		if(entity.getPos().equals(node.entity.getPos())) {
+			Enode next = findNextNode(node);
+			if (next == null)
+				node = node.left;
+			else
+				node = next;
+		}
+		
 		if(smaller(entity.getPos(), node.entity.getPos()))
-			node.left = remove(entity, node.left);
+			remove(entity, node.left);	
 		else
-			node.right = remove(entity, node.right);
-		return node;
+			remove(entity, node.right);	
 	}
 	
+	private void replaceWithNext(Enode node) {
+		
+		
+	}
+	
+	private Enode findNextNode(Enode node) {
+		if(node.right == null)
+			return null;
+		Enode next = node.right;
+		while(next.left != null)
+			next = next.left;
+		return next;
+	}
+
 	private boolean smaller(Position one, Position two) {
-		return one.compareTo(two) < 0;
+		return one.compareTo(two) <= 0;
 	}
 }

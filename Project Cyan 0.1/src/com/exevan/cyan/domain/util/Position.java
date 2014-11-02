@@ -45,7 +45,6 @@ public class Position implements Comparable<Position>{
 			return false;
 		Position other = (Position) o;
 		return (this.getX() == other.getX()) && (this.getY() == other.getY());
-
 	}
 
 	@Override
@@ -55,7 +54,19 @@ public class Position implements Comparable<Position>{
 
 	@Override
 	public int compareTo(Position other) {
-		return (int) (Math.sqrt(this.getX()*this.getX() + this.getY()*this.getY()) -
+		double d = (Math.sqrt(this.getX()*this.getX() + this.getY()*this.getY()) -
 				Math.sqrt(other.getX()*other.getX() + other.getY()*other.getY()));
+		System.out.println(d);
+		if(d < 0)
+			return -1;
+		else if(d > 0)
+			return 1;
+		else return 0;
+		
+	}
+	
+	@Override
+	public String toString() {
+		return "(" + x +", " + y +")";
 	}
 }

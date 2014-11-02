@@ -1,8 +1,13 @@
 package com.exevan.cyan.domain.entity;
 
-import com.exevan.cyan.domain.util.Position;
+import java.awt.Graphics2D;
 
-public class Entity {
+import com.exevan.cyan.domain.util.Position;
+import com.exevan.cyan.framework.event.Event;
+import com.exevan.cyan.framework.event.IEventListener;
+import com.exevan.cyan.ui.rendering.Drawable;
+
+public abstract class Entity implements IEventListener, Drawable {
 
 	protected Position pos;
 	
@@ -29,5 +34,14 @@ public class Entity {
 	public void setY(int y) {
 		pos.setY(y);
 	}
+
+	@Override
+	public void handle(Event e) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public abstract void draw(Graphics2D g);
 
 }

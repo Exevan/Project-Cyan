@@ -8,6 +8,7 @@ import java.awt.event.MouseEvent;
 import javax.swing.JPanel;
 
 import com.exevan.cyan.framework.dispatch.InputDispatcher;
+import com.exevan.cyan.ui.rendering.Renderer;
 
 public class Display extends JPanel {
 
@@ -38,12 +39,13 @@ public class Display extends JPanel {
 	
 	public void setDispatcher(InputDispatcher dispatcher) {
 		this.dispatcher = dispatcher;
+		this.renderer.setDispatcher(dispatcher);
 	}
 
 	@Override
 	public void paint(Graphics g) {
 		super.paint(g);
-		renderer.drawGrid(g);
+		renderer.renderScreen(g);
 	}
 
 }

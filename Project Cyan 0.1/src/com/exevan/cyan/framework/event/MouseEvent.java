@@ -2,7 +2,7 @@ package com.exevan.cyan.framework.event;
 
 public class MouseEvent extends Event {
 
-	public static final int TYPE = 3;
+	public static final int TYPE = 2;
 	
 	private int x, y;
 	
