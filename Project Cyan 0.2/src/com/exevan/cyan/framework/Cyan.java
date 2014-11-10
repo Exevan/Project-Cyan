@@ -21,7 +21,7 @@ public class Cyan {
 	}
 	
 	private void initWorld() {
-		world = new World(4827928831l, 1024, 1024);
+		world = new World(1111111111l, 1024, 1024);
 	}
 	
 	private void initUI() {

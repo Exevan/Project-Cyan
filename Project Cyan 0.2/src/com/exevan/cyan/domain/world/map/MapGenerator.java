@@ -2,52 +2,38 @@ package com.exevan.cyan.domain.world.map;
 
 import java.util.Random;
 
-public class MapGenerator {
+import com.exevan.cyan.domain.world.Tile;
 
-	private static int GRID_SCALE = 50;
+public class MapGenerator {
+	
 	private static Random rand = new Random();
 	private static int w, h;
 
-	@Deprecated
-	public static double[][] generateMap_OLD(long seed, int width, int height) {
-		double[][] map = new double[width][height];
-		double[][][] grad = generateGrad((int) (width/GRID_SCALE)+1, (int) (height/GRID_SCALE)+1, 1.0);
-
-		double max = Double.MIN_VALUE;
-		double min = Double.MAX_VALUE;
-
-		for (int i = 0; i < map.length; i++) {
-			for (int j = 0; j < map[0].length; j++) {
-				double p = perlinNoise(((double) i) / 100, ((double) j) / 100, grad);
-				map[i][j] = p;
-				max = (max < p) ? p : max;
-				min = (min > p) ? p : min;
+	public static Tile[][] generateMap(long seed, int width, int height) {
+		Tile[][] map = new Tile[width][height];
+		float[][] hMap = generateHeightMap(seed, width, height);
+		for (int i = 0; i < hMap.length; i++) {
+			for (int j = 0; j < hMap[0].length; j++) {
+				map[i][j] = new Tile(hMap[i][j]);
 			}
 		}
-
-		for (int i = 0; i < map.length; i++) {
-			for (int j = 0; j < map[0].length; j++) {
-				map[i][j] = (map[i][j] - min) / (max - min); //Limit 0 to 1
-			}
-		}
-
 		return map;
 	}
-
-	public static double[][] generateMap(long seed, int width, int height) {
+	
+	private static float[][] generateHeightMap(long seed, int width, int height) {
 		
 		//Initialize map and grid
 		w = width; h = height; rand.setSeed(seed);
-		int oct = 8;
-		double[][] map = new double[width][height];	
-		double[][][][] grid = new double[oct][][][];
+		int oct = 8;  
+		float[][] map = new float[width][height];	
+		float[][][][] grid = new float[oct][][][];
 	
 		//Calculate fBm parameters
-		double freq = 2.0d / (width+height);
+		float freq = 2.0f / (width+height);
 		freq = (freq < 4) ? 4 : freq;
-		double lac = 2.0d;
-		double per = 0.5d;
-		double amp = 1.0d;
+		float lac = 2.0f;
+		float per = 0.5f;
+		float amp = 1.0f;
 
 		//Generate gradients
 		for(int i = oct - 1; i >= 0; i--) {
@@ -59,13 +45,13 @@ public class MapGenerator {
 			amp *= per;
 		}
 
-		double max = Double.MIN_VALUE;
-		double min = Double.MAX_VALUE;
+		float max = Float.MIN_VALUE;
+		float min = Float.MAX_VALUE;
 
 		//Calculate fBm
 		for (int i = 0; i < map.length; i++) {
 			for (int j = 0; j < map[0].length; j++) {
-				double p = 0.0;
+				float p = 0.0f;
 				for(int o = 0; o < oct; o++) {
 					p += perlinNoise(i, j, grid[o]);
 				}
@@ -85,11 +71,11 @@ public class MapGenerator {
 		return map;
 	}
 
-	private static double perlinNoise(double u, double v, double[][][] grad) {
+	private static float perlinNoise(float u, float v, float[][][] grad) {
 		
 		//Rescale map points to grid points
-		double x = (u*(grad.length-1))/(w); 
-		double y = (v*(grad[0].length-1))/(h);
+		float x = (u*(grad.length-1))/(w); 
+		float y = (v*(grad[0].length-1))/(h);
 		
 		//Determine nearest grid points //TODO: fix this properly
 		int x0 = (int) x;
@@ -100,18 +86,18 @@ public class MapGenerator {
 //		int y1 = (y0 + 1) % grad[0].length;
 
 		//Determine weights using S-function
-		double fx = x - (int)x;
-		double fy = y - (int)y;
-		double wx = fx*fx*(3-2*fx);
-		double wy = fy*fy*(3-2*fy);
+		float fx = x - (int)x;
+		float fy = y - (int)y;
+		float wx = fx*fx*(3-2*fx);
+		float wy = fy*fy*(3-2*fy);
 
 		//Calculate noise value
-		double l0, l1, ix, iy, p;
-		l0 = dotGrid(x0, y0, x, y, grad);
-		l1 = dotGrid(x1, y0, x, y, grad);
+		float l0, l1, ix, iy, p;
+		l0 = dotGrad(x0, y0, x, y, grad);
+		l1 = dotGrad(x1, y0, x, y, grad);
 		ix = cerp(l0, l1, wx);
-		l0 = dotGrid(x0, y1, x, y, grad);
-		l1 = dotGrid(x1, y1, x, y, grad);
+		l0 = dotGrad(x0, y1, x, y, grad);
+		l1 = dotGrad(x1, y1, x, y, grad);
 		iy = cerp(l0, l1, wx);
 		p = cerp(ix, iy, wy);
 
@@ -119,29 +105,29 @@ public class MapGenerator {
 	}
 
 	@SuppressWarnings("unused")
-	private static double lerp(double a, double b, double w) {
+	private static float lerp(float a, float b, float w) {
 		return (1.0f - w)*a + w*b;
 	}
 
-	private static double cerp(double a, double b, double w) {
-		double ft = w * 3.1415927;
-		double f = (1 - Math.cos(ft)) * 0.5;
+	private static float cerp(float a, float b, float w) {
+		float ft = w * 3.1415927f;
+		float f = (float) ((1 - Math.cos(ft)) * 0.5f);
 		return  a*(1-f) + b*f;
 	}
 
-	private static double dotGrid(int i, int j, double x, double y, double[][][] grad) {
-		double dx = i - x;
-		double dy = j - y;
+	private static float dotGrad(int i, int j, float x, float y, float[][][] grad) {
+		float dx = i - x;
+		float dy = j - y;
 		return (dx*grad[i][j][0] + dy*grad[i][j][1]);
 
 	}
 
-	private static double[][][] generateGrad(int width, int height, double amp) {
-		double[][][] grad = new double[width][height][2];
+	private static float[][][] generateGrad(int width, int height, float amp) {
+		float[][][] grad = new float[width][height][2];
 		for (int i = 0; i < grad.length; i++) {
 			for (int j = 0; j < grad[0].length; j++) {
-				grad[i][j][0] = (rand.nextFloat() * 2.0 - 1.0) * amp;
-				grad[i][j][1] = (rand.nextFloat() * 2.0 - 1.0) * amp;
+				grad[i][j][0] = (rand.nextFloat() * 2.0f - 1.0f) * amp;
+				grad[i][j][1] = (rand.nextFloat() * 2.0f - 1.0f) * amp;
 			}
 		}
 		return grad;
